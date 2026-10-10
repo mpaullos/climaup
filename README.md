@@ -1,45 +1,75 @@
-<h1 align="center">Weather Project</h1>
+# React + TypeScript + Vite
 
-<p align="center">
-  <img alt="Github top language" src="https://img.shields.io/github/languages/top/mpaullos/WeatherProject?color=b2d4e6">
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-  <img alt="Github language count" src="https://img.shields.io/github/languages/count/mpaullos/WeatherProject?color=b2d4e6">
+Currently, two official plugins are available:
 
-  <img alt="Repository size" src="https://img.shields.io/github/repo-size/mpaullos/WeatherProject?color=b2d4e6">
-</p>
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
+## React Compiler
 
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-<hr>
+## Expanding the ESLint configuration
 
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
+```js
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
 
-<br>
+      // Remove tseslint.configs.recommended and replace with this
+      tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      tseslint.configs.stylisticTypeChecked,
 
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 
-<img src="https://user-images.githubusercontent.com/82289818/209745071-907f9038-6cb2-4d91-8956-5f1cf26bd86b.png" />
+```
 
+You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
 
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
 
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+      // Enable lint rules for React
+      reactX.configs['recommended-typescript'],
+      // Enable lint rules for React DOM
+      reactDom.configs.recommended,
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 
-
-
-
-## :dart: Sobre? ##
-Weather Project é um projeto que tem o intuito de mostrar a previsão de tempo da cidade buscada, utilizando a api do OpenWeather
-
-
-
-## :rocket: Tecnologias ##
-
-- [JavaScript](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript)
-- [Html](https://developer.mozilla.org/pt-BR/docs/Web/HTML)
-- [Css](https://developer.mozilla.org/pt-BR/docs/Web/CSS)
-- [Express](https://expressjs.com/)
-- [NodeJs](https://nodejs.org/en/)
-- [Ejs](https://ejs.co/#docs)
-
-## :zap: [Acesse](https://weather-project-snowy-nine.vercel.app/)
-
-
- 
+```
