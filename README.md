@@ -1,4 +1,11 @@
-# 🌤️ ClimaDot — Previsão do tempo
+<div align="center">
+  
+# 🌤️ ClimaDot
+O clima na medida certa.
+
+**Simples · Moderno · Intuitivo**
+
+</div>
 
 <img width="1598" height="754" alt="image" src="https://github.com/user-attachments/assets/4ccc712a-997c-48b0-b31f-daa19c3db4b9" />
 
