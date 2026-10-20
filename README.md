@@ -1,4 +1,4 @@
-# 🌤️ Clima. — Previsão do tempo
+# 🌤️ ClimaDot — Previsão do tempo
 
 <img width="1598" height="754" alt="image" src="https://github.com/user-attachments/assets/4ccc712a-997c-48b0-b31f-daa19c3db4b9" />
 
@@ -7,7 +7,7 @@ Aplicação web moderna para consultar as condições climáticas atuais e a pre
 
 ## 👋 Sobre
 
-O **Clima.** mostra informações meteorológicas de forma clara e visual. É possível:
+O **ClimaDot** mostra informações meteorológicas de forma clara e visual. É possível:
 
 - Pesquisar cidades com sugestões e geolocalização;
 - Consultar temperatura, sensação térmica, umidade, pressão, vento, visibilidade e índice UV;
@@ -66,8 +66,8 @@ Sem uma chave configurada, a aplicação inicia com dados demonstrativos de algu
 Clone o repositório, entre na pasta do projeto e instale as dependências:
 
 ```bash
-git clone https://github.com/mpaullos/weather-app.git
-cd weather-app
+git clone https://github.com/mpaullos/climadot.git
+cd climadot
 npm install
 ```
 

@@ -437,7 +437,7 @@ export const WeatherLayout: React.FC<WeatherLayoutProps> = ({
       <Drawer
         isOpen={isMobileMenuOpen}
         onClose={() => setIsMobileMenuOpen(false)}
-        title="Clima."
+        title="ClimaDot"
       >
         <CitySearch
           onSearch={(city, coords, state, country) => {
