@@ -88,7 +88,7 @@ export const WeatherLayout: React.FC<WeatherLayoutProps> = ({
           <header className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <span className="text-2xl font-bold tracking-tight text-white drop-shadow">
-                Clima.
+                ClimaUp
               </span>
               {weather?.isMockOrSample && (
                 <span className="text-[10px] uppercase tracking-wider text-amber-300/90 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-full backdrop-blur-sm">
@@ -437,7 +437,7 @@ export const WeatherLayout: React.FC<WeatherLayoutProps> = ({
       <Drawer
         isOpen={isMobileMenuOpen}
         onClose={() => setIsMobileMenuOpen(false)}
-        title="ClimaDot"
+        title="ClimaUp"
       >
         <CitySearch
           onSearch={(city, coords, state, country) => {

@@ -1,6 +1,6 @@
 <div align="center">
   
-# 🌤️ ClimaDot
+# 🌤️ ClimaUp
 O clima na medida certa.
 
 **Simples · Moderno · Intuitivo**
@@ -14,7 +14,7 @@ Aplicação web moderna para consultar as condições climáticas atuais e a pre
 
 ## 👋 Sobre
 
-O **ClimaDot** mostra informações meteorológicas de forma clara e visual. É possível:
+O **ClimaUp** mostra informações meteorológicas de forma clara e visual. É possível:
 
 - Pesquisar cidades com sugestões e geolocalização;
 - Consultar temperatura, sensação térmica, umidade, pressão, vento, visibilidade e índice UV;
@@ -73,8 +73,8 @@ Sem uma chave configurada, a aplicação inicia com dados demonstrativos de algu
 Clone o repositório, entre na pasta do projeto e instale as dependências:
 
 ```bash
-git clone https://github.com/mpaullos/climadot.git
-cd climadot
+git clone https://github.com/mpaullos/climaup.git
+cd climaup
 npm install
 ```
 
