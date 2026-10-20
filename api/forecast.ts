@@ -256,7 +256,7 @@ export function aggregateForecastToDays(rawList: any[], timezoneOffsetSec = 0) {
   return result.length > 0 ? result : generateDynamicDemoForecast('default', timezoneOffsetSec);
 }
 
-export async function forecastHandler(req: Request, res: Response) {
+export default async function forecastHandler(req: Request, res: Response) {
   try {
     const q = (req.query.q as string)?.trim();
     const lat = req.query.lat as string;
