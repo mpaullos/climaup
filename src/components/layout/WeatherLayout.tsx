@@ -116,6 +116,7 @@ export const WeatherLayout: React.FC<WeatherLayoutProps> = ({
                 onClick={onToggleUnit}
                 className="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 text-xs font-medium text-white transition-all"
                 aria-label="Alternar unidade de temperatura"
+                title={ unit === 'celsius' ? 'Mostrar em Fahrenheit' : 'Mostrar em Celsius' }
               >
                 {unit === 'celsius' ? '°C' : '°F'}
               </button>
