@@ -23,20 +23,6 @@ interface ForecastTemplate {
 }
 
 const TEMPLATES_BY_CITY: Record<string, ForecastTemplate[]> = {
-  riga: [
-    { tempMin: 3, tempMax: 7, condition: 'Chuva Leve', conditionMain: 'Rain', conditionId: 500, iconCode: '10d', pop: 70, humidity: 85 },
-    { tempMin: 2, tempMax: 6, condition: 'Nublado', conditionMain: 'Clouds', conditionId: 804, iconCode: '04d', pop: 30, humidity: 75 },
-    { tempMin: 1, tempMax: 5, condition: 'Chuva e Neve', conditionMain: 'Snow', conditionId: 615, iconCode: '13d', pop: 85, humidity: 88 },
-    { tempMin: 0, tempMax: 4, condition: 'Nublado', conditionMain: 'Clouds', conditionId: 803, iconCode: '03d', pop: 20, humidity: 70 },
-    { tempMin: 2, tempMax: 6, condition: 'Chuvoso', conditionMain: 'Rain', conditionId: 501, iconCode: '10d', pop: 60, humidity: 80 },
-  ],
-  liepaja: [
-    { tempMin: 4, tempMax: 8, condition: 'Nublado', conditionMain: 'Clouds', conditionId: 804, iconCode: '04d', pop: 25, humidity: 70 },
-    { tempMin: 3, tempMax: 7, condition: 'Céu Limpo', conditionMain: 'Clear', conditionId: 800, iconCode: '01d', pop: 10, humidity: 65 },
-    { tempMin: 2, tempMax: 6, condition: 'Parcialmente Nublado', conditionMain: 'Clouds', conditionId: 802, iconCode: '02d', pop: 15, humidity: 68 },
-    { tempMin: 4, tempMax: 9, condition: 'Chuva Leve', conditionMain: 'Rain', conditionId: 500, iconCode: '10d', pop: 50, humidity: 75 },
-    { tempMin: 5, tempMax: 8, condition: 'Chuvoso', conditionMain: 'Rain', conditionId: 501, iconCode: '10d', pop: 75, humidity: 82 },
-  ],
   default: [
     // Clima tropical para Sergipe / Brasil
     { tempMin: 23, tempMax: 29, condition: 'Parcialmente Nublado', conditionMain: 'Clouds', conditionId: 802, iconCode: '02d', pop: 25, humidity: 72 },
@@ -51,14 +37,8 @@ const TEMPLATES_BY_CITY: Record<string, ForecastTemplate[]> = {
  * Gera previsão de 5 dias dinamicamente a partir do dia de amanhã relativo ao momento atual.
  * Garante que os dias sejam estritamente sequenciais (ex: se hoje é Segunda -> Terça (Amanhã), Quarta, Quinta, Sexta, Sábado).
  */
-export function generateDynamicDemoForecast(cityName = '', timezoneOffsetSec = -10800) {
-  const lowerCity = (cityName || '').toLowerCase();
-  let templates = TEMPLATES_BY_CITY.default;
-  if (lowerCity.includes('riga')) {
-    templates = TEMPLATES_BY_CITY.riga;
-  } else if (lowerCity.includes('liepaja')) {
-    templates = TEMPLATES_BY_CITY.liepaja;
-  }
+export function generateDynamicDemoForecast(_cityName = '', timezoneOffsetSec = -10800) {
+  const templates = TEMPLATES_BY_CITY.default;
 
   // Data e hora local na cidade hoje
   const nowMs = Date.now() + timezoneOffsetSec * 1000;
@@ -256,7 +236,7 @@ export function aggregateForecastToDays(rawList: any[], timezoneOffsetSec = 0) {
   return result.length > 0 ? result : generateDynamicDemoForecast('default', timezoneOffsetSec);
 }
 
-export default async function forecastHandler(req: Request, res: Response) {
+export async function forecastHandler(req: Request, res: Response) {
   try {
     const q = (req.query.q as string)?.trim();
     const lat = req.query.lat as string;
@@ -276,11 +256,7 @@ export default async function forecastHandler(req: Request, res: Response) {
     }
 
     // Estima timezone padrão com base na cidade / coordenadas conhecidas caso offline
-    let defaultTimezoneSec = -10800; // Sergipe / Brasil UTC-3
-    const lowerQ = (q || '').toLowerCase();
-    if (lowerQ.includes('riga') || lowerQ.includes('liepaja')) {
-      defaultTimezoneSec = 10800; // Letônia UTC+3
-    }
+    const defaultTimezoneSec = -10800; // Sergipe / Brasil UTC-3
 
     // Se nenhuma chave configurada: retorna demonstração correspondente DINÂMICA
     if (!apiKey || apiKey === 'SUA_CHAVE_OPENWEATHERMAP') {
@@ -318,3 +294,5 @@ export default async function forecastHandler(req: Request, res: Response) {
     return res.json({ list: demoList });
   }
 }
+
+export default forecastHandler;
