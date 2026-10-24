@@ -119,18 +119,6 @@ const DEMO_GEO_SUGGESTIONS = [
     lon: -49.2733,
   },
   {
-    name: 'Riga',
-    country: 'LV',
-    lat: 56.9496,
-    lon: 24.1052,
-  },
-  {
-    name: 'Liepaja',
-    country: 'LV',
-    lat: 56.5167,
-    lon: 21.0167,
-  },
-  {
     name: 'Pondicherry',
     state: 'Puducherry',
     country: 'IN',
@@ -220,9 +208,8 @@ export async function geoHandler(req: Request, res: Response) {
       const matched = DEMO_GEO_SUGGESTIONS.filter((item) => {
         const itemNormName = normalizeText(item.name);
         const itemNormState = normalizeText(item.state || '');
-        const itemNormCountry = normalizeText(item.country);
 
-        // Se o usuário especificou estado (ex: BA / Bahia)
+        // Se o usuário especificou estado (ex: "Simão Dias SE", "Aracaju Sergipe")
         if (parsed.stateUF) {
           const stateMatches =
             itemNormState === normalizeText(parsed.stateName || '') ||
@@ -231,10 +218,19 @@ export async function geoHandler(req: Request, res: Response) {
           return nameMatches && stateMatches;
         }
 
-        const nameMatch = itemNormName.includes(normRawQuery) || normRawQuery.includes(itemNormName);
-        const stateMatch = itemNormState.includes(normRawQuery);
-        const countryMatch = itemNormCountry === normRawQuery;
-        return nameMatch || stateMatch || countryMatch;
+        // Se buscou pelo nome da cidade
+        const nameMatch = itemNormName.startsWith(normRawQuery) || itemNormName.includes(normRawQuery);
+        if (nameMatch) return true;
+
+        // Se a busca inteira for o nome/sigla de um estado brasileiro (ex: "Sergipe", "SE", "Bahia", "BA")
+        const isPureStateQuery = Object.entries(BRAZIL_STATES).some(
+          ([uf, name]) => normalizeText(uf) === normRawQuery || normalizeText(name) === normRawQuery
+        );
+        if (isPureStateQuery && itemNormState === normRawQuery) {
+          return true;
+        }
+
+        return false;
       });
 
       // Ordena com prioridade para cidades brasileiras quando a consulta for em português
@@ -245,7 +241,7 @@ export async function geoHandler(req: Request, res: Response) {
 
     // Consulta à API oficial de Geocoding do OpenWeatherMap
     let queryToApi = rawQuery;
-    if (parsed.stateUF) {
+    if (parsed.stateUF && parsed.cityName) {
       queryToApi = `${parsed.cityName},${parsed.stateUF},BR`;
     }
 
@@ -271,6 +267,40 @@ export async function geoHandler(req: Request, res: Response) {
         items = await fallbackRes.json();
       }
     }
+
+    // FILTRO ANTI-FALSOS POSITIVOS E HOMÔNIMOS INDEVIDOS:
+    // 1. Simão Dias é exclusivamente um município em Sergipe (rejeita povoados ribeirinhos homônimos, ex: no Amazonas)
+    // 2. Lagarto, Poço Verde e Aracaju pertencem exclusivamente a Sergipe
+    // 3. Rejeita localidades cujo nome seja um estado brasileiro fora do estado correto
+    items = items.filter((item) => {
+      const itemCityNorm = normalizeText(item.local_names?.pt || item.name || '');
+      const itemStateNorm = normalizeText(item.state || '');
+      const itemCountry = (item.country || '').toUpperCase();
+
+      if (itemCityNorm === 'simao dias' && itemStateNorm !== 'sergipe') {
+        return false;
+      }
+      if (itemCityNorm === 'lagarto' && itemStateNorm !== 'sergipe') {
+        return false;
+      }
+      if (itemCityNorm === 'poco verde' && itemStateNorm !== 'sergipe') {
+        return false;
+      }
+      if (itemCityNorm === 'aracaju' && itemStateNorm !== 'sergipe') {
+        return false;
+      }
+
+      // Rejeita localidades com nome de estado brasileiro em outro estado/país
+      for (const [uf, stateName] of Object.entries(BRAZIL_STATES)) {
+        const stateNorm = normalizeText(stateName);
+        if (stateNorm === 'sao paulo' || stateNorm === 'rio de janeiro') continue;
+        if (itemCityNorm === stateNorm && (itemCountry !== 'BR' || itemStateNorm !== stateNorm)) {
+          return false;
+        }
+      }
+
+      return true;
+    });
 
     // Se ainda vazio ou consulta local, mescla também sugestões conhecidas de demonstração
     if (normCityName) {

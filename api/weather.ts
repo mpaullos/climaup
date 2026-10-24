@@ -122,59 +122,33 @@ const DEMO_REFERENCE_DATA: Record<string, any> = {
     cod: 200,
     isSample: true,
   },
-  riga: {
-    id: 456172,
-    name: 'Riga',
-    sys: { country: 'LV' },
+  salvador: {
+    id: 3450554,
+    name: 'Salvador',
+    state: 'Bahia',
+    sys: { country: 'BR' },
+    coord: { lat: -12.9777, lon: -38.5016 },
     main: {
-      temp: 5,
-      feels_like: 3,
-      temp_min: 3,
-      temp_max: 6,
-      pressure: 1018,
-      humidity: 50,
+      temp: 28,
+      feels_like: 30,
+      temp_min: 24,
+      temp_max: 30,
+      pressure: 1013,
+      humidity: 72,
     },
-    wind: { speed: 3.33, deg: 280 }, // 3.33 m/s ≈ 12 km/h
-    clouds: { all: 100 },
+    wind: { speed: 4.17, deg: 110 },
+    clouds: { all: 35 },
     visibility: 10000,
     weather: [
       {
-        id: 501,
-        main: 'Rain',
-        description: 'Chuvoso',
-        icon: '10n',
-      },
-    ],
-    dt: Math.floor(Date.now() / 1000),
-    timezone: 10800,
-    cod: 200,
-    isSample: true,
-  },
-  liepaja: {
-    id: 457954,
-    name: 'Liepaja',
-    sys: { country: 'LV' },
-    main: {
-      temp: 6,
-      feels_like: 4,
-      temp_min: 4,
-      temp_max: 7,
-      pressure: 1019,
-      humidity: 45,
-    },
-    wind: { speed: 5.0, deg: 260 }, // 5.0 m/s ≈ 18 km/h
-    clouds: { all: 100 },
-    visibility: 10000,
-    weather: [
-      {
-        id: 804,
+        id: 802,
         main: 'Clouds',
-        description: 'Nublado',
-        icon: '04d',
+        description: 'Parcialmente nublado',
+        icon: '02d',
       },
     ],
     dt: Math.floor(Date.now() / 1000),
-    timezone: 10800,
+    timezone: -10800,
     cod: 200,
     isSample: true,
   },
@@ -208,11 +182,16 @@ const DEMO_REFERENCE_DATA: Record<string, any> = {
   },
 };
 
-// Aliases para Sergipe
+// Aliases para Sergipe e Bahia
 DEMO_REFERENCE_DATA['aracaju, se'] = DEMO_REFERENCE_DATA['aracaju'];
 DEMO_REFERENCE_DATA['aracaju se'] = DEMO_REFERENCE_DATA['aracaju'];
 DEMO_REFERENCE_DATA['aracaju, sergipe'] = DEMO_REFERENCE_DATA['aracaju'];
 DEMO_REFERENCE_DATA['aracaju sergipe'] = DEMO_REFERENCE_DATA['aracaju'];
+DEMO_REFERENCE_DATA['sergipe'] = DEMO_REFERENCE_DATA['aracaju'];
+DEMO_REFERENCE_DATA['bahia'] = DEMO_REFERENCE_DATA['salvador'];
+DEMO_REFERENCE_DATA['salvador, ba'] = DEMO_REFERENCE_DATA['salvador'];
+DEMO_REFERENCE_DATA['salvador ba'] = DEMO_REFERENCE_DATA['salvador'];
+DEMO_REFERENCE_DATA['salvador, bahia'] = DEMO_REFERENCE_DATA['salvador'];
 DEMO_REFERENCE_DATA['simao dias'] = DEMO_REFERENCE_DATA['simão dias'];
 DEMO_REFERENCE_DATA['simao dias, se'] = DEMO_REFERENCE_DATA['simão dias'];
 DEMO_REFERENCE_DATA['simão dias, se'] = DEMO_REFERENCE_DATA['simão dias'];
@@ -294,6 +273,7 @@ export async function weatherHandler(req: Request, res: Response) {
           ) {
             return res.status(200).json({
               ...item,
+              dt: Math.floor(Date.now() / 1000),
               needsApiKey: true,
             });
           }
@@ -310,6 +290,7 @@ export async function weatherHandler(req: Request, res: Response) {
         if (demoCity) {
           return res.status(200).json({
             ...DEMO_REFERENCE_DATA[demoCity],
+            dt: Math.floor(Date.now() / 1000),
             needsApiKey: true,
           });
         }
