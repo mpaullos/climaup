@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import type { WeatherData, TemperatureUnit } from '../../types/weather';
-import { formatDisplayTemp } from '../../utils/formatWeather';
+import { formatDisplayTemp, formatCityDateTime } from '../../utils/formatWeather';
+import { Clock3 } from "lucide-react";
 import { WeatherIcon } from './WeatherIcon';
 
 interface CurrentWeatherProps {
@@ -14,6 +15,24 @@ export const CurrentWeather: React.FC<CurrentWeatherProps> = ({
   unit,
   variant = 'desktop',
 }) => {
+  // Relógio vivo que atualiza em tempo real no fuso horário da cidade
+  const [currentUtcSec, setCurrentUtcSec] = useState<number>(() => Math.floor(Date.now() / 1000));
+
+  useEffect(() => {
+    // Sincroniza imediatamente ao mudar de localidade
+    setCurrentUtcSec(Math.floor(Date.now() / 1000));
+
+    // Atualiza a cada segundo
+    const timer = setInterval(() => {
+      setCurrentUtcSec(Math.floor(Date.now() / 1000));
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [data.city, data.timezoneOffset]);
+
+  const timezoneOffset = typeof data.timezoneOffset === 'number' ? data.timezoneOffset : -10800;
+  const liveDateTime = formatCityDateTime(currentUtcSec, timezoneOffset);
+
   const displayTemp = formatDisplayTemp(
     data.temp,
     unit,
@@ -23,17 +42,24 @@ export const CurrentWeather: React.FC<CurrentWeatherProps> = ({
   if (variant === 'mobile') {
     return (
       <div className="flex flex-col items-start w-full px-1">
-        {/* Temperatura Gigante no topo */}
+        {/* Temperatura Gigante isolada no centro */}
         <div className="w-full flex justify-center py-6">
           <span className="text-7xl sm:text-8xl font-light tracking-tighter text-white tabular-nums drop-shadow-md select-none">
             {displayTemp}
           </span>
         </div>
 
-        {/* Linha com Cidade à esquerda e Ícone/Descrição à direita */}
+        {/* Linha com Horário/Cidade/Data à esquerda e Ícone/Condição à direita */}
         <div className="w-full flex items-end justify-between mt-2 pt-2">
-          <div className="flex flex-col">
-            <h1 className="text-2xl sm:text-3xl font-medium tracking-tight text-white drop-shadow">
+          <div className="flex-1 min-w-0 pr-3">
+            {/* Horário local minimalista sem com pílula logo acima do nome da cidade */}
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-medium tracking-wider text-white/90 tabular-nums shadow-sm backdrop-blur-sm">
+              <Clock3 className="h-3.5 w-3.5 text-amber-300" />
+              {liveDateTime.time}
+            </span>
+
+
+            <h1 className="text-2xl sm:text-3xl font-medium tracking-tight text-white drop-shadow truncate">
               {data.city}
               {data.state && (
                 <span className="text-xs font-normal text-amber-300 ml-1.5">
@@ -46,14 +72,14 @@ export const CurrentWeather: React.FC<CurrentWeatherProps> = ({
                 </span>
               ) : null}
             </h1>
-            <p className="text-xs font-light text-white/75 mt-0.5 tracking-wide drop-shadow-sm">
-              {data.formattedDate.includes(' ') && !data.formattedDate.includes(':')
-                ? data.formattedDate
-                : data.formattedDate.replace(/^\d{2}:\d{2}\s*/, '')}
+
+            {/* Data Completa em Linha Única sem quebra */}
+            <p className="text-xs font-light text-white/80 mt-0.5 tracking-wide drop-shadow-sm capitalize truncate">
+              {liveDateTime.dateLong}
             </p>
           </div>
 
-          <div className="flex flex-col items-center shrink-0 pl-3">
+          <div className="flex flex-col items-center shrink-0 pl-2 text-right">
             <div className="p-1 mb-1">
               <WeatherIcon
                 conditionId={data.conditionId}
@@ -61,7 +87,7 @@ export const CurrentWeather: React.FC<CurrentWeatherProps> = ({
                 className="w-7 h-7 text-white drop-shadow"
               />
             </div>
-            <span className="text-xs font-light text-white/85 tracking-wide capitalize">
+            <span className="text-xs font-light text-white/85 tracking-wide capitalize text-center max-w-[120px] leading-tight">
               {data.condition}
             </span>
           </div>
@@ -70,7 +96,7 @@ export const CurrentWeather: React.FC<CurrentWeatherProps> = ({
     );
   }
 
-  // Visual Desktop 
+  // Visual Desktop (estilo Screenshot 2: Pondicherry 20° com data e ícone)
   return (
     <div className="flex flex-col justify-end">
       <div className="flex items-baseline gap-5">
@@ -99,7 +125,7 @@ export const CurrentWeather: React.FC<CurrentWeatherProps> = ({
 
           <div className="flex items-center gap-3 mt-1.5">
             <p className="text-xs lg:text-sm font-light text-white/80 drop-shadow">
-              {data.formattedDate}
+              {liveDateTime.desktopFull}
             </p>
 
             <span className="text-white/40">|</span>
