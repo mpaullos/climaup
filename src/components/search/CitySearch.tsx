@@ -436,7 +436,8 @@ export const CitySearch: React.FC<CitySearchProps> = ({
                         e.stopPropagation();
                         onRemoveSaved(loc.name);
                       }}
-                      className="opacity-0 group-hover:opacity-100 p-1 text-white/40 hover:text-red-300 transition-opacity"
+                      className="p-1.5 text-white/50 hover:text-red-400 hover:bg-red-500/10 active:scale-90 rounded-md transition-all opacity-70 group-hover:opacity-100"
+                      title={`Remover ${loc.name} dos favoritos`}
                       aria-label={`Remover ${loc.name} dos favoritos`}
                     >
                       <Trash2 className="w-3.5 h-3.5" />
