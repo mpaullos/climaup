@@ -57,7 +57,7 @@ export const WeatherLayout: React.FC<WeatherLayoutProps> = ({
     : getWeatherTheme(800, '01d', 'Pondicherry');
 
   return (
-    <div className="relative min-h-screen md:h-screen md:max-h-screen md:overflow-hidden w-full flex flex-col justify-between select-none">
+    <div className="relative min-h-[100dvh] md:h-screen md:max-h-screen md:overflow-hidden w-full flex flex-col justify-between select-none bg-black">
       {/* 1. Camada de Imagem de Fundo Dinâmica */}
       <div
         className="fixed inset-0 z-0 bg-cover bg-center transition-all duration-1000 ease-in-out scale-105"
@@ -314,7 +314,7 @@ export const WeatherLayout: React.FC<WeatherLayoutProps> = ({
       {/* ============================================================== */}
       {/* VISTA MOBILE */}
       {/* ============================================================== */}
-      <div className="relative z-10 flex flex-col md:hidden min-h-screen justify-between p-5 sm:p-8 max-w-md mx-auto w-full">
+      <div className="relative z-10 flex flex-col md:hidden min-h-[100dvh] justify-between p-5 sm:p-8 pb-[calc(env(safe-area-inset-bottom,0px)+1.25rem)] max-w-md mx-auto w-full">
         {/* Topo: Hambúrguer, Indicadores de Paginação de Cidades e Ações */}
         <header className="flex items-center justify-between w-full pt-1">
           {/* Botão Hambúrguer (Abre Drawer de Busca & Cidades) */}
@@ -326,7 +326,7 @@ export const WeatherLayout: React.FC<WeatherLayoutProps> = ({
             <Menu className="w-6 h-6 drop-shadow" />
           </button>
 
-          {/* Indicador de Carrossel de Cidades Salvas  */}
+          {/* Indicador de Carrossel de Cidades Salvas */}
           <div className="flex items-center gap-2">
             {savedLocations.slice(0, 3).map((loc, idx) => {
               const isActive =
@@ -346,20 +346,36 @@ export const WeatherLayout: React.FC<WeatherLayoutProps> = ({
             })}
           </div>
 
-          {/* Ações Rápidas: Alternar Unidade (°C / °F) e Atualizar */}
-          <div className="flex items-center gap-1">
+          {/* Ações Rápidas: Favoritar, Alternar Unidade (°C / °F) e Atualizar */}
+          <div className="flex items-center gap-1.5">
+            <button
+              onClick={onToggleSave}
+              title={isSaved ? 'Remover dos favoritos' : 'Salvar cidade nos favoritos'}
+              className={`p-1.5 rounded-full border transition-all ${
+                isSaved
+                  ? 'bg-amber-500/20 border-amber-400 text-amber-300'
+                  : 'bg-white/10 border-white/15 text-white/70 hover:text-white hover:bg-white/20'
+              }`}
+              aria-label="Favoritar cidade"
+            >
+              <Star className="w-4 h-4 fill-current" />
+            </button>
+
             <button
               onClick={onToggleUnit}
-              className="text-xs px-2 py-1 rounded bg-white/10 border border-white/15 text-white/90"
+              className="text-xs px-2.5 py-1 rounded-full bg-white/10 border border-white/15 text-white/90 hover:bg-white/20 transition-all font-medium"
               aria-label="Alternar unidade"
+              title={unit === 'celsius' ? 'Mostrar em Fahrenheit' : 'Mostrar em Celsius'}
             >
               {unit === 'celsius' ? '°C' : '°F'}
             </button>
+
             <button
               onClick={onRefresh}
               disabled={loading}
-              className="p-1.5 text-white/80 hover:text-white"
+              className="p-1.5 rounded-full bg-white/10 border border-white/15 text-white/80 hover:text-white transition-all disabled:opacity-50"
               aria-label="Atualizar dados"
+              title="Atualizar clima"
             >
               <RefreshCw
                 className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`}
