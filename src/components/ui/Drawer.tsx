@@ -37,7 +37,7 @@ export const Drawer: React.FC<DrawerProps> = ({
       />
 
       {/* Drawer Content */}
-      <div className="relative w-4/5 max-w-sm h-full bg-slate-900/95 backdrop-blur-2xl border-r border-white/10 p-6 flex flex-col z-10 shadow-2xl animate-in slide-in-from-left duration-300">
+      <div className="relative w-4/5 max-w-sm h-full bg-black/80 backdrop-blur-2xl border-r border-white/15 p-6 pb-[calc(env(safe-area-inset-bottom,0px)+1.5rem)] flex flex-col z-10 shadow-2xl animate-in slide-in-from-left duration-300">
         <div className="flex items-center justify-between pb-4 border-b border-white/10 mb-4">
           <span className="text-lg font-bold tracking-tight text-white">
             {title}
