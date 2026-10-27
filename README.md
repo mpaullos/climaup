@@ -153,3 +153,5 @@ O servidor disponibiliza internamente:
 - `GET /api/geo` — busca e geocodificação de cidades;
 - `GET /api/config` — verifica se existe uma chave configurada no servidor;
 - `GET /api/health` — verifica o status do servidor.
+
+## 🌐 [Acesse](https://climaup.vercel.app/)
